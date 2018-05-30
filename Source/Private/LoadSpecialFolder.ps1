@@ -1,6 +1,3 @@
-$Script:SpecialFolders = [Ordered]@{}
-$OFS = ';'
-
 function LoadSpecialFolders {
     [CmdletBinding()]param()
     Write-Information "LoadSpecialFolders" -Tags "Trace", "Enter"
@@ -26,10 +23,4 @@ function LoadSpecialFolders {
     $Script:SpecialFolders.SystemModules = Join-Path (Split-Path $Profile.AllUsersAllHosts) "Modules"
 
     Write-Information "LoadSpecialFolders" -Tags "Trace", "Exit"
-}
-
-if($MyInvocation.MyCommand.Source.EndsWith("ps1")) {
-  LoadSpecialFolders
-
-  $SpecialFolders.Modules
 }
