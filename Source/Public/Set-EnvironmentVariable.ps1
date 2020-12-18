@@ -16,9 +16,11 @@ function Set-EnvironmentVariable {
     )
     Write-Information "Set-EnvironmentVariable $Name $Value -Scope $Machine" -Tags "Trace", "Enter"
 
+    # Set the variable in the process scope
     Set-Content "ENV:$Name" $Value
     $Success = $False
     do {
+        # Try setting it at a persistent scope
         try {
             [System.Environment]::SetEnvironmentVariable($Name, $Value, $Scope)
             Write-Verbose "Set $Scope environment variable $Name = $Value"
@@ -26,7 +28,7 @@ function Set-EnvironmentVariable {
         }
         catch [System.Security.SecurityException]
         {
-            if($FailFast) {
+            if ($FailFast) {
                 $PSCmdlet.ThrowTerminatingError( (New-Object System.Management.Automation.ErrorRecord (
                     New-Object AccessViolationException "Can't set environment variable in $Scope scope"
                 ), "FailFast:$Scope", "PermissionDenied", $Scope) )
